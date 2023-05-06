@@ -58,14 +58,33 @@ if ! sudo -v; then
 fi
 
 # Check if the user has the required dependencies
-for command in curl nginx certbot puppet mysql haproxy; do
+for command in curl puppet; do
     if ! command -v $command &> /dev/null; then
         echo "Command $command is missing"
         # Call the appropriate function to install the missing dependency
         install_${command}
     fi
+done
 
-    # Check if the dependency has a service
+# Check if the server is a load balancer
+hostname="$(uname -n)"
+if [[ "$hostname" == *lb* ]]; then
+    for command in haproxy certbot; do
+    if ! command -v $command &> /dev/null; then
+        install_$command
+    fi
+done
+fi
+
+# Check if the server is a web server
+if [[ "$hostname" == *web* ]]; then
+    if ! command -v nginx &> /dev/null; then
+        install_nginx
+    fi
+fi
+
+# Check if the dependency has a service
+for command in nginx haproxy certbot, mysql; do
     if systemctl -q is-active $command.service; then
         echo "$command service is already running"
     else
