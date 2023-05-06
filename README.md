@@ -8,7 +8,7 @@ running:
     - haproxy
     - certbot
     - MySQL
-    - puppet-agent
+    - puppet
     - curl
 
 Puppet will be checked first and if not installed
