@@ -38,15 +38,15 @@ done
 
 # Decrypt the configuration files
 openssl enc -aes-256-cbc -iter 10000 -d -in ./load_balancer/config.cfg.enc -out ./load_balancer/config.cfg
-openssl enc -aes-256-cbc -iter 10000 -d -in ./backend/config.cfg.enc -out ./backend/config.cfg
+openssl enc -aes-256-cbc -iter 10000 -d -in ./backend/default.enc -out ./backend/default
 
 # Check if the server is a load balancer
 hostname="$(uname -n)"
 if [[ "$hostname" == *lb* ]]; then
-    bash "./load_balancer/main.sh"
+    ./load_balancer/main.sh
 fi
 
 # Check if the server is a web server
 if [[ "$hostname" == *web* ]]; then
-    bash "./backend/main.sh"
+    ./backend/main.sh
 fi
