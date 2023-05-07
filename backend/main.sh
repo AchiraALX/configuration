@@ -36,7 +36,7 @@ done
 
 # Echo the contents in the default file to /etc/nginx/sites-available/default
 # This will overwrite the contents in the file
-puppet apply /home/ubuntu/configuration/backend/back.pp
+puppet apply ./backend/back.pp
 
 # If host name is web01
 # puppet apply web01.pp

@@ -36,15 +36,16 @@ for command in curl puppet; do
     fi
 done
 
+
 # Check if the server is a load balancer
 hostname="$(uname -n)"
 if [[ "$hostname" == *lb* ]]; then
     openssl enc -aes-256-cbc -iter 10000 -d -in ./load_balancer/config.cfg.enc -out ./load_balancer/config.cfg
-    /home/ubuntu/configuration/load_balancer/main.sh
+    ./load_balancer/main.sh
 fi
 
 # Check if the server is a web server
 if [[ "$hostname" == *web* ]]; then
     openssl enc -aes-256-cbc -iter 10000 -d -in ./backend/default.enc -out ./backend/default
-    /home/ubuntu/configuration/backend/main.sh
+    ./backend/main.sh
 fi
