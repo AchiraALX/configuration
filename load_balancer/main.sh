@@ -8,7 +8,7 @@ install_certbot() {
 }
 
 # Install mysql-client
-install_mysql_client() {
+install_mysql() {
     echo "Installing mysql-client..."
     apt-get update
     apt-get install -y mysql-client-core-8.0
