@@ -19,7 +19,7 @@ install_mysql() {
     systemctl start mysql
 }
 
-for command in nginx mysql-server; do
+for command in nginx mysql; do
     if ! command -v $command &> /dev/null; then
         install_$command
     fi
