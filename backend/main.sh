@@ -11,7 +11,7 @@ install_nginx() {
 }
 
 # Install mysql-server
-install_mysql_server() {
+install_mysql() {
     echo "Installing mysql-server..."
     apt-get update
     apt-get install -y mysql-server
@@ -36,7 +36,7 @@ done
 
 # Echo the contents in the default file to /etc/nginx/sites-available/default
 # This will overwrite the contents in the file
-cat < default > /etc/nginx/sites-available/default
+puppet apply ./backend/back.pp
 
 # If host name is web01
 # puppet apply web01.pp
