@@ -38,4 +38,4 @@ for command in haproxy; do
     fi
 done
 
-puppet apply lb.pp
+puppet apply ./load_balancer/lb.pp
