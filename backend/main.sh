@@ -1,6 +1,39 @@
 #!/usr/bin/env bash
 # This script is used to run configuration files
 
+# Install nginx
+install_nginx() {
+    echo "Installing nginx..."
+    apt-get update
+    apt-get install -y nginx-core
+    echo "Starting nginx service..."
+    systemctl start nginx
+}
+
+# Install mysql-server
+install_mysql_server() {
+    echo "Installing mysql-server..."
+    apt-get update
+    apt-get install -y mysql-server
+    echo "Starting mysql service..."
+    systemctl start mysql
+}
+
+for command in nginx mysql-server; do
+    if ! command -v $command &> /dev/null; then
+        install_$command
+    fi
+done
+
+for command in nginx mysql; do
+    if systemctl -q is-active $command.service; then
+        echo "$command service is already running"
+    else
+        echo "Starting $command service..."
+        systemctl start $command.service
+    fi
+done
+
 # Echo the contents in the default file to /etc/nginx/sites-available/default
 # This will overwrite the contents in the file
 cat default > /etc/nginx/sites-available/default

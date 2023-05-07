@@ -9,40 +9,10 @@ install_curl() {
     apt-get install -y curl
 }
 
-install_nginx() {
-    echo "Installing nginx..."
-    apt-get update
-    apt-get install -y nginx
-    echo "Starting nginx service..."
-    systemctl start nginx
-}
-
-install_certbot() {
-    echo "Installing certbot..."
-    apt-get update
-    apt-get install -y certbot
-}
-
 install_puppet() {
     echo "Installing puppet..."
     apt-get update
     apt-get install -y puppet
-}
-
-install_mysql() {
-    echo "Installing mysql..."
-    apt-get update
-    apt-get install -y mysql
-    echo "Starting mysql service..."
-    systemctl start mysql
-}
-
-install_haproxy() {
-    echo "Installing haproxy..."
-    apt-get update
-    apt-get install -y haproxy
-    echo "Starting haproxy service..."
-    systemctl start haproxy
 }
 
 # Check if the user is root
@@ -69,28 +39,10 @@ done
 # Check if the server is a load balancer
 hostname="$(uname -n)"
 if [[ "$hostname" == *lb* ]]; then
-    for command in haproxy certbot; do
-    if ! command -v $command &> /dev/null; then
-        install_$command
-    fi
-done
+    bash "./load_balancer/main.sh"
 fi
 
 # Check if the server is a web server
 if [[ "$hostname" == *web* ]]; then
-    if ! command -v nginx &> /dev/null; then
-        install_nginx
-        bash "./mount_file_system.sh"
-        bash "./backend/main.sh"
-    fi
+    bash "./backend/main.sh"
 fi
-
-# Check if the dependency has a service
-for command in nginx haproxy mysql; do
-    if systemctl -q is-active $command.service; then
-        echo "$command service is already running"
-    else
-        echo "Starting $command service..."
-        systemctl start $command.service
-    fi
-done
