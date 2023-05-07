@@ -7,7 +7,7 @@ if [[ -z "$commit_msg" ]]; then
 fi
 
 git add --all
-git reset ./backend/default ./l*1/*.cfg
+git reset ./backend/default ./load_balancer/*.cfg
 git commit -m "$commit_msg"
 git push
 
