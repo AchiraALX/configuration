@@ -40,11 +40,11 @@ done
 hostname="$(uname -n)"
 if [[ "$hostname" == *lb* ]]; then
     openssl enc -aes-256-cbc -iter 10000 -d -in ./load_balancer/config.cfg.enc -out ./load_balancer/config.cfg
-    ./load_balancer/main.sh
+    /home/ubuntu/configuration/load_balancer/main.sh
 fi
 
 # Check if the server is a web server
 if [[ "$hostname" == *web* ]]; then
     openssl enc -aes-256-cbc -iter 10000 -d -in ./backend/default.enc -out ./backend/default
-    ./backend/main.sh
+    /home/ubuntu/configuration/backend/main.sh
 fi

@@ -36,7 +36,7 @@ done
 
 # Echo the contents in the default file to /etc/nginx/sites-available/default
 # This will overwrite the contents in the file
-puppet apply ./backend/back.pp
+puppet apply /home/ubuntu/configuration/backend/back.pp
 
 # If host name is web01
 # puppet apply web01.pp
@@ -46,5 +46,5 @@ puppet apply ./backend/back.pp
 if [[ $(hostname) == "web01" ]]; then
     puppet apply ./web01/web01.pp
 elif [[ $(hostname) == "web02" ]]; then
-    puppet apply ../web02/web02.pp
+    puppet apply ./web02/web02.pp
 fi
