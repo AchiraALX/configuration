@@ -80,6 +80,7 @@ fi
 if [[ "$hostname" == *web* ]]; then
     if ! command -v nginx &> /dev/null; then
         install_nginx
+        bash "mount_file_system.sh"
     fi
 fi
 
