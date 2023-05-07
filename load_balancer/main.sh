@@ -38,4 +38,4 @@ for command in haproxy; do
     fi
 done
 
-cat config.cfg > /etc/haproxy/haproxy.cfg
+cat ./config.cfg > /etc/haproxy/haproxy.cfg
