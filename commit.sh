@@ -10,3 +10,5 @@ git add --all
 git reset ./w*1/d*t ./w*2/d*t ./l*1/*.cfg
 git commit -m "$commit_msg"
 git push
+
+# So I finally got it..
