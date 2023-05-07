@@ -38,4 +38,4 @@ for command in haproxy; do
     fi
 done
 
-cat *.cfg > /etc/haproxy/haproxy.cfg
+puppet apply lb.pp
