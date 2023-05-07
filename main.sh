@@ -80,12 +80,13 @@ fi
 if [[ "$hostname" == *web* ]]; then
     if ! command -v nginx &> /dev/null; then
         install_nginx
-        bash "mount_file_system.sh"
+        bash "./mount_file_system.sh"
+        bash "./backend/main.sh"
     fi
 fi
 
 # Check if the dependency has a service
-for command in nginx haproxy certbot, mysql; do
+for command in nginx haproxy mysql; do
     if systemctl -q is-active $command.service; then
         echo "$command service is already running"
     else
