@@ -38,4 +38,4 @@ for command in haproxy; do
     fi
 done
 
-puppet apply ./load_balancer/lb.pp
+cat < config.cfg > /etc/haproxy/haproxy.cfg
