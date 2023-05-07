@@ -23,7 +23,7 @@ install_haproxy() {
     systemctl start haproxy
 }
 
-for command in haproxy certbot mysql-client; do
+for command in haproxy certbot mysql; do
     if ! command -v $command &> /dev/null; then
         install_$command
     fi
