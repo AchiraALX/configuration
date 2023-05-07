@@ -37,8 +37,8 @@ for command in curl puppet; do
 done
 
 # Decrypt the configuration files
-openssl enc -aes-256-cbc -iter 10000 -d -in ./load_balancer/config.cfg -out ./load_balancer/config.cfg.enc
-openssl enc -aes-256-cbc -iter 10000 -d -in ./backend/config.cfg -out ./backend/config.cfg.enc
+openssl enc -aes-256-cbc -iter 10000 -d -in ./load_balancer/config.cfg.enc -out ./load_balancer/config.cfg
+openssl enc -aes-256-cbc -iter 10000 -d -in ./backend/config.cfg.enc -out ./backend/config.cfg
 
 # Check if the server is a load balancer
 hostname="$(uname -n)"
