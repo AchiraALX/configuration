@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Define variables
-server1="54.208.220.252"
+server1="52.205.216.235"
 server2="3.80.18.178"
 share="/path/to/share"
 mount_point="/mnt/shared"
