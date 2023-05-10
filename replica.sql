@@ -1,0 +1,16 @@
+CREATE USER 'holberton_user'@'localhost' IDENTIFIED BY 'projectcorrection280hbtn';
+
+GRANT REPLICATION CLIENT ON *.* TO 'holberton_user'@'localhost';
+
+STOP SLAVE;
+
+CHANGE MASTER TO
+MASTER_HOST='52.205.216.235',
+MASTER_USER='replica_user',
+MASTER_PASSWORD='@lazyachiraJ1',
+MASTER_LOG_FILE='binlog.000009',
+MASTER_LOG_POS=157;
+
+START SLAVE;
+
+SHOW SLAVE STATUS\G
