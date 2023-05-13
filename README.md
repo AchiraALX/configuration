@@ -13,3 +13,6 @@ running:
 
 Puppet will be checked first and if not installed
 it will be installed
+
+# Contributors
+- [Jacob Achira](ed127720@students.mu.ac.ke)
