@@ -10,7 +10,7 @@ openssl enc -aes-256-cbc -iter 10000 -in ./load_balancer/config.cfg -out ./load_
 openssl enc -aes-256-cbc -iter 10000 -in ./backend/default -out ./backend/default.enc
 
 git add --all
-git reset ./backend/default ./load_balancer/*.cfg
+git reset ./backend/default ./load_balancer/*.cfg ./backend/local_default
 git commit -m "$commit_msg"
 git push
 

@@ -19,6 +19,13 @@ install_mysql() {
     systemctl start mysql
 }
 
+# Install libsystemd-dev
+install_libsystemd() {
+    echo "Installing libsystemd-dev..."
+    apt-get update
+    apt-get install -y libsystemd-dev
+}
+
 for command in nginx mysql; do
     if ! command -v $command &> /dev/null; then
         install_$command
