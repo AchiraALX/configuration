@@ -6,21 +6,9 @@ import os
 from pathlib import Path
 import socket
 import subprocess
+import sys
 
-
-# Get the host name of the local machine
-host = lambda: socket.gethostname()
-
-# Get the username of the current user
-user = lambda: getpass.getuser()
-
-# Run a process
-run_process = lambda args: subprocess.check_call(args, shell=True)
-
-# Check if the current user is root
-root = lambda: os.geteuid() == 0
-
-packages = ['virtualenv', 'numpy', 'flask', 'gunicorn', "systemd"]
+packages = ['virtualenv', 'numpy', 'flask', 'gunicorn']
 
 for i in packages:
     if check_pkg(i):
@@ -28,8 +16,8 @@ for i in packages:
     else:
         install_pkg(i)
 
-path = os.chdir(Path.home())
-dirs = os.listdir(path)
+os.chdir(Path.home())
+dirs = os.listdir(Path.home())
 
 if "myproject" not in dirs:
     os.mkdir("myproject")
@@ -39,8 +27,13 @@ os.chdir(Path.home() / "myproject")
 if not os.path.isdir("myprojectenv"):
     run_process(['virtualenv myprojectenv'])
 
+os.chdir(Path.home() / "myproject")
+print(os.getcwd())
+
 # Activate the environment
-run_process(['. myprojectenv/bin/activate'])
+activate_script = Path.home() / "myproject/myprojectenv/bin/activate"
+run_process(['source', activate_script])
+print(sys.executable)
 
 # Install packages in the environment
 env_pkgs = ['gunicorn', 'flask']
@@ -81,15 +74,13 @@ copy_file(src_flask, dest_flask)
 copy_file(src_wsgi, dest_wsgi)
 
 
-
-
 if user() == "achira":
     @set_root_and_run
     def copy_service():
         return ["cp", "/home/achira/Desktop/achira/Desktop/configuration/backend/myproject_achira.service", "/etc/systemd/system/"]
 
     copy_service()
-    print("Copying service...")
+    print("Copying achira service...")
 
 else:
     @set_root_and_run
@@ -128,8 +119,22 @@ for service in service:
         print(f"An error occurred while starting {service}")
         print(e)
 
+default_nginx = [
+    "/etc/nginx/sites-enabled/default",
+    "/etc/nginx/sites-available/default"
+]
+
+for i in default_nginx:
+    if os.path.isfile(i):
+        @set_root_and_run
+        def delete_default():
+            return ["rm", i]
+
+        delete_default()
+        print("Deleting default nginx...\n")
+
 src_local_nginx = "/home/achira/Desktop/achira/Desktop/configuration/backend/nginx_copy"
-dest_local_nginx = "/etc/nginx/sites-available/myproject"
+dest_local_nginx = "/etc/nginx/sites-available/default"
 
 @set_root_and_run
 def copy_nginx():
@@ -138,9 +143,9 @@ def copy_nginx():
 copy_nginx()
 print("Copying nginx...\n")
 
-myproject_link = "/etc/nginx/sites-enabled/myproject"
+myproject_link = os.path.islink("/etc/nginx/sites-enabled/default")
 
-if not myproject_link:
+if myproject_link:
     @set_root_and_run
     def enable_nginx():
         return ["ln", "-s", dest_local_nginx, "/etc/nginx/sites-enabled"]
@@ -178,6 +183,11 @@ allow_nginx()
 print("Allowing Nginx Full...\n")
 
 print("Deployment complete\n")
+
+print(sys.executable)
+
+# run gunicorn --bind
+# run_process(['gunicorn', '--bind', '0:5000', 'wsgi:app'])
 
 
 

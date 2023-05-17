@@ -15,6 +15,21 @@ import systemd
 
 stack = Stack()
 
+# Get the host name of the local machine
+host = lambda: socket.gethostname()
+
+# Get the username of the current user
+user = lambda: getpass.getuser()
+
+# Run a process
+run_process = lambda args: subprocess.check_call(args, shell=True)
+
+# Check if the current user is root
+root = lambda: os.geteuid() == 0
+
+# Current working directory
+cwd = lambda: os.getcwd()
+
 def check_pkg(pkg_name):
     try:
         pkg_resources.get_distribution(pkg_name)
