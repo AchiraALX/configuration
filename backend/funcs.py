@@ -6,12 +6,10 @@ from classes import Stack
 from functools import wraps
 import getpass
 import os
-from pathlib import Path
 import pkg_resources
 import shutil
 import socket
 import subprocess
-import systemd
 
 stack = Stack()
 
@@ -135,6 +133,42 @@ def test_nginx():
         return ["nginx", "-t"]
 
     return test()
+
+def welcome_user(user):
+    """Welcome a user"""
+    for i in range(3):
+        print()
+        if i == 1:
+            text = f"Welcome {user}!".upper()
+            distance = int(((60 / 2) - 10) - (len(text) / 2))
+            print_equal(10, end="")
+            print(" " * distance, end="")
+            print(text, end="")
+            print(" " * distance, end="")
+            print_equal(10) if len(text) % 2 == 0 else print_equal(11)
+
+            continue
+
+        print_equal(60)
+
+    print()
+
+def print_equal(num: int, end="\n"):
+    """Print equal signs"""
+    for i in range(num):
+        print("=", end="")
+        if i == num - 1:
+            print(end=end)
+
+def check_service(service_name: str) -> int:
+    """Check the status of a service
+
+    Args:
+        service_name (str): the name of the service
+    """
+
+    return run_process([f"systemctl is-active {service_name}"])
+
 
 
 

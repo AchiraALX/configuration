@@ -28,12 +28,6 @@ if not os.path.isdir("myprojectenv"):
     run_process(['virtualenv myprojectenv'])
 
 os.chdir(Path.home() / "myproject")
-print(os.getcwd())
-
-# Activate the environment
-activate_script = Path.home() / "myproject/myprojectenv/bin/activate"
-run_process(['source', activate_script])
-print(sys.executable)
 
 # Install packages in the environment
 env_pkgs = ['gunicorn', 'flask']
@@ -77,7 +71,7 @@ copy_file(src_wsgi, dest_wsgi)
 if user() == "achira":
     @set_root_and_run
     def copy_service():
-        return ["cp", "/home/achira/Desktop/achira/Desktop/configuration/backend/myproject_achira.service", "/etc/systemd/system/"]
+        return ["cp /home/achira/Desktop/achira/Desktop/configuration/backend/myproject_achira.service /etc/systemd/system/"]
 
     copy_service()
     print("Copying achira service...")
@@ -85,13 +79,13 @@ if user() == "achira":
 else:
     @set_root_and_run
     def copy_service():
-        return ["cp", f"/home/{user()}/configuration/myproject.service", "/etc/systemd/system/"]
+        return ["cp /home/{user()}/configuration/myproject.service /etc/systemd/system/"]
 
     copy_service()
     print("Copying service...")
 
 
-service = ["myproject" if user() == "achira" else "myproject_achira"]
+service = ["myproject_achira" if user() == "achira" else "myproject"]
 for service in service:
     try:
         @set_root_and_run
@@ -101,19 +95,26 @@ for service in service:
         daemon_reload()
         print("Reloading daemon...")
 
-        @set_root_and_run
-        def start_service():
-            return ["systemctl", "start", service]
+        if check_service(service) == 0:
+            @set_root_and_run
+            def start_service():
+                return ["systemctl", "start", service]
 
-        start_service()
-        print(f"Starting {service}...")
+            start_service()
+            print(f"Starting {service}...")
 
-        @set_root_and_run
-        def enable_service():
-            return ["systemctl", "enable", service]
+            @set_root_and_run
+            def enable_service():
+                return ["systemctl", "enable", service]
 
-        enable_service()
-        print(f"Enabling {service}...")
+            enable_service()
+            print(f"Enabling {service}...")
+        else:
+            @set_root_and_run
+            def restart_service():
+                return ["systemctl", "restart", service]
+
+        run_process(['service myproject_achira status'])
 
     except subprocess.CalledProcessError as e:
         print(f"An error occurred while starting {service}")
@@ -165,8 +166,12 @@ if test_nginx() == 0:
     restart_nginx()
     print("Restarting nginx...\n")
 
+    run_process(['service nginx status'])
+
 else:
     print("Nginx configuration test failed\n")
+
+print()
 
 @set_root_and_run
 def delete_5000():
@@ -183,8 +188,6 @@ allow_nginx()
 print("Allowing Nginx Full...\n")
 
 print("Deployment complete\n")
-
-print(sys.executable)
 
 # run gunicorn --bind
 # run_process(['gunicorn', '--bind', '0:5000', 'wsgi:app'])
